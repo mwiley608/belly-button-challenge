@@ -1,51 +1,92 @@
 // STEP 1 Use D3 library to read in samples.json from URL
-// Get the samples endpoint
+// Get the samples endpoint - url
 const samples = "https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json";
 
 // Fetch the JSON data and console log it
-d3.json(samples).then(function(data) {
+d3.json(samples).then((data) => {
   console.log(data);
 });
 
-//STEP 2 Create horizontal bar chart, dropdown menu of top 10 OTUs
+
+//STEP 2 Create horizontal bar chart(sample_values = values, otu_ids = labels, otu_labels = hovertext), dropdown menu of top 10 OTUs
 // READ ME https://plotly.com/javascript/bar-charts/ 
-var data = [
-    {
-      x: ['giraffes', 'orangutans', 'monkeys'],
-      y: [20, 14, 23],
-      type: 'bar'
-    }
-  ];
+function barChart(sample) {
+  //d3.json(samples).then((data) => {
+
+    //Activity 14.2.8 - Slice
+    //.map create hovertext
+    let yticks = sample.otu_ids.slice(0, 10).map(id => `OTU ${id}`).reverse();
+    let xticks = sample.sample_values.slice(0, 10).reverse();
+    let barLabels = sample.otu_labels.slice(0, 10).reverse();
+    console.log(yticks, xticks, labels);
+
+  //Trace for Bar Chart
+  let traceBar = {
+      x: xticks,
+      y: yticks,
+      text: barLabels,
+      type: 'bar',
+      orientation: 'h'
+    };
+
+    //Layout for BarChart
+    let layoutBar = {
+      title: 'Top 10 OTUs'
+    };
   
-  Plotly.newPlot('myDiv', data);
+    //Plot Bar Chart with Plotly
+    Plotly.newPlot('bar', traceBar, layoutBar);
+};
 
 //STEP 3 Create bubble chart displaying each sample
+//otu_ids = x, sample_values = y, sample_values = marker size, otu_ids = marker colors, otu_labels = text values
 //READ ME https://plotly.com/javascript/bubble-charts/
-var trace1 = {
-    x: [1, 2, 3, 4],
-    y: [10, 11, 12, 13],
-    text: ['A<br>size: 40', 'B<br>size: 60', 'C<br>size: 80', 'D<br>size: 100'],
+function bubbleChart(sample) {
+  let otu_ids = sample.otu_ids;
+  let otu_labels = sample.otu_labels;
+  let sample_values = sample.sample_values;
+  console.log(otu_ids, otu_labels, sample_values);
+
+  //Trace for Bubble Chart
+  let traceBubble = {
+    x: otu_ids,
+    y: sample_values,
+    text: otu_labels,
     mode: 'markers',
     marker: {
-      color: ['rgb(93, 164, 214)', 'rgb(255, 144, 14)',  'rgb(44, 160, 101)', 'rgb(255, 65, 54)'],
-      size: [40, 60, 80, 100]
+      color: otu_ids,
+      size: sample_values
     }
   };
   
-  var data = [trace1];
+ //Layout for Bubble Chart
   
-  var layout = {
+  let layoutBubble = {
     title: 'Bubble Chart Hover Text',
     showlegend: false,
     height: 600,
     width: 600
   };
-  
-  Plotly.newPlot('myDiv', data, layout);
+
+  //Plot Bubble Chart with Plotly
+  Plotly.newPlot('bubble', traceBubble, layoutBubble);
+}
+
 //STEP 4 Display sample metadata (demographic info)
+function populateMetadata(sample) {
+  d3.json(samples).then((data) => {
+    let metadata = data.metadata;
+  }
+},
+
 //STEP 5 Display key-value pair from metadata JSON object
-//STEP 6 update plots when new sample selected
+//STEP 6 Update plots when new sample selected
 //STEP 7 Display app to hosting service
+
+
+//Class Activity 14.3.10
+// Initilize dropdown menu for dashboard
+
 
 // Class Activity start
 // Initializes the page with a default plot
